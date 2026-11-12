@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fractales_fisica"
+version = "1.0.0"
+description = "Simulador del libro «Física con fractales»: dimensión fractal, caos, difusión anómala, DLA, percolación, turbulencia y cálculo fraccionario"
+readme = "README.md"
+authors = [{ name = "M Lopez P" }]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.22"]
+
+[project.optional-dependencies]
+figuras = ["matplotlib>=3.6", "pillow>=9"]
+ia = ["anthropic>=0.70"]
+pruebas = ["pytest>=7"]
+
+[project.urls]
+Repositorio = "https://github.com/mlopezpalma/fisica-con-fractales"
+Aplicacion = "https://mlopezpalma.github.io/fisica-con-fractales/"
+
+[tool.setuptools]
+packages = ["fractales_fisica"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

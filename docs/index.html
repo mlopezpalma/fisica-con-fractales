@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- La página solo puede conectarse con la API de Anthropic (pestaña IA); scripts e imágenes, solo locales. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src https://api.anthropic.com">
+<meta name="referrer" content="no-referrer">
+<title>Física con fractales — simulador</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header>
+  <h1>Física con fractales <span>simulador del libro de M Lopez P</span></h1>
+  <nav role="tablist" aria-label="Simulaciones">
+    <button role="tab" data-pestana="fractales" aria-selected="true">Fractales</button>
+    <button role="tab" data-pestana="dimension">Dimensión</button>
+    <button role="tab" data-pestana="caminatas">Caminatas</button>
+    <button role="tab" data-pestana="dla">DLA</button>
+    <button role="tab" data-pestana="percolacion">Percolación</button>
+    <button role="tab" data-pestana="caos">Caos</button>
+    <button role="tab" data-pestana="fraccionaria">Difusión fraccionaria</button>
+    <button role="tab" data-pestana="ia">IA</button>
+  </nav>
+</header>
+
+<main>
+<section id="fractales" class="panel activo" role="tabpanel">
+  <div class="controles">
+    <label>Conjunto
+      <select id="f-tipo">
+        <option value="koch">Curva de Koch</option><option value="cantor">Conjunto de Cantor</option>
+        <option value="sierpinski">Sierpinski (determinista)</option><option value="caos">Sierpinski (juego del caos)</option>
+        <option value="mandelbrot">Mandelbrot</option><option value="julia">Julia</option>
+      </select></label>
+    <label>Nivel / iteraciones <input id="f-nivel" type="range" min="0" max="8" value="4"><output id="f-nivel-v">4</output></label>
+    <label class="solo-julia">c (Julia) <input id="f-cre" type="number" step="0.01" value="-0.8"> + <input id="f-cim" type="number" step="0.01" value="0.156"> i</label>
+    <button id="f-dibujar">Dibujar</button>
+  </div>
+  <canvas id="f-lienzo" width="720" height="480" aria-label="Fractal dibujado"></canvas>
+  <p class="resultado" id="f-res" aria-live="polite"></p>
+</section>
+
+<section id="dimension" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>Imagen propia <input id="d-archivo" type="file" accept="image/*"></label>
+    <button id="d-prueba">Usar Sierpinski de prueba</button>
+    <label>Umbral de gris <input id="d-umbral" type="range" min="0.05" max="0.95" step="0.05" value="0.5"><output id="d-umbral-v">0,5</output></label>
+    <label><input id="d-claro" type="checkbox"> el objeto es claro sobre fondo oscuro</label>
+    <button id="d-medir">Medir D</button>
+  </div>
+  <div class="doble">
+    <canvas id="d-imagen" width="360" height="360" aria-label="Imagen binarizada"></canvas>
+    <canvas id="d-grafica" width="360" height="360" aria-label="Recta log-log del conteo de cajas"></canvas>
+  </div>
+  <p class="resultado" id="d-res" aria-live="polite"></p>
+  <p class="nota">La imagen se procesa en tu navegador; no sale del ordenador. Comprueba siempre el método con el fractal de prueba (D teórica = log 3 / log 2 ≈ 1,585).</p>
+</section>
+
+<section id="caminatas" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>Tipo
+      <select id="c-tipo"><option value="browniano">Browniana</option><option value="levy">Vuelo de Lévy</option><option value="ctrw">Esperas largas (CTRW)</option></select></label>
+    <label>μ (Lévy) <input id="c-mu" type="range" min="0.6" max="2" step="0.1" value="1.5"><output id="c-mu-v">1,5</output></label>
+    <label>α (CTRW) <input id="c-alfa" type="range" min="0.2" max="1" step="0.1" value="0.6"><output id="c-alfa-v">0,6</output></label>
+    <label>Semilla <input id="c-semilla" type="number" value="2" min="1"></label>
+    <button id="c-simular">Simular</button>
+  </div>
+  <div class="doble">
+    <canvas id="c-tray" width="360" height="360" aria-label="Trayectoria"></canvas>
+    <canvas id="c-msd" width="360" height="360" aria-label="Escala del desplazamiento"></canvas>
+  </div>
+  <p class="resultado" id="c-res" aria-live="polite"></p>
+</section>
+
+<section id="dla" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>Partículas <input id="a-n" type="number" value="3000" min="200" max="12000" step="100"></label>
+    <label>Semilla <input id="a-semilla" type="number" value="11" min="1"></label>
+    <button id="a-crecer">Hacer crecer</button><button id="a-parar">Parar</button>
+  </div>
+  <div class="doble">
+    <canvas id="a-lienzo" width="401" height="401" aria-label="Agregado DLA"></canvas>
+    <canvas id="a-grafica" width="360" height="360" aria-label="Masa frente a radio"></canvas>
+  </div>
+  <p class="resultado" id="a-res" aria-live="polite"></p>
+</section>
+
+<section id="percolacion" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>Lado L <input id="p-L" type="number" value="128" min="16" max="400"></label>
+    <label>p <input id="p-p" type="range" min="0.4" max="0.8" step="0.0001" value="0.5927"><output id="p-p-v">0,5927</output></label>
+    <label>Semilla <input id="p-semilla" type="number" value="25" min="1"></label>
+    <button id="p-red">Generar red</button><button id="p-barrido">Estimar el umbral</button>
+  </div>
+  <div class="doble">
+    <canvas id="p-lienzo" width="384" height="384" aria-label="Red de percolación"></canvas>
+    <canvas id="p-grafica" width="360" height="360" aria-label="Probabilidad de cruce"></canvas>
+  </div>
+  <p class="resultado" id="p-res" aria-live="polite"></p>
+</section>
+
+<section id="caos" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>Sistema <select id="k-tipo"><option value="logistico">Mapa logístico</option><option value="lorenz">Atractor de Lorenz</option></select></label>
+    <label>r (logístico) <input id="k-r" type="range" min="2.8" max="4" step="0.001" value="3.9"><output id="k-r-v">3,900</output></label>
+    <button id="k-calcular">Calcular</button>
+  </div>
+  <div class="doble">
+    <canvas id="k-lienzo" width="360" height="360" aria-label="Diagrama"></canvas>
+    <canvas id="k-grafica" width="360" height="360" aria-label="Gráfica auxiliar"></canvas>
+  </div>
+  <p class="resultado" id="k-res" aria-live="polite"></p>
+</section>
+
+<section id="fraccionaria" class="panel" role="tabpanel">
+  <div class="controles">
+    <label>α <input id="x-alfa" type="range" min="0.2" max="1" step="0.05" value="0.5"><output id="x-alfa-v">0,50</output></label>
+    <label>Pasos de tiempo <input id="x-nt" type="number" value="200" min="50" max="600" step="50"></label>
+    <button id="x-resolver">Resolver</button>
+  </div>
+  <div class="doble">
+    <canvas id="x-perfiles" width="360" height="360" aria-label="Perfiles u(x,t)"></canvas>
+    <canvas id="x-msd" width="360" height="360" aria-label="Desplazamiento cuadrático medio"></canvas>
+  </div>
+  <p class="resultado" id="x-res" aria-live="polite"></p>
+  <p class="nota">Ecuación ∂<sup>α</sup>u/∂t<sup>α</sup> = K ∂²u/∂x² (Caputo, esquema L1 implícito), K = 1, x ∈ [−12, 12], t ≤ 1. Teoría: ⟨x²⟩ = 2K t<sup>α</sup>/Γ(1 + α).</p>
+</section>
+
+<section id="ia" class="panel" role="tabpanel">
+  <p>Explica el <strong>último resultado</strong> calculado en cualquier pestaña. Sin clave, la explicación se genera aquí mismo con plantillas (modo sin clave).</p>
+  <div class="controles">
+    <label>Clave de la API de Anthropic (opcional)
+      <input id="i-clave" type="password" autocomplete="off" spellcheck="false" placeholder="no se guarda en ningún sitio"></label>
+    <button id="i-borrar">Olvidar la clave</button>
+  </div>
+  <label class="bloque">Pregunta
+    <textarea id="i-pregunta" rows="3">Explica qué significa este resultado, qué hipótesis tiene y cómo lo compruebo con el simulador.</textarea></label>
+  <div class="controles"><button id="i-explicar">Explicar</button></div>
+  <pre id="i-contexto" class="contexto" aria-label="Resultado que se enviará"></pre>
+  <pre id="i-respuesta" class="respuesta" aria-live="polite"></pre>
+  <p class="nota">La clave se queda en la memoria de esta página: no se guarda en el navegador, ni en cookies, ni en archivos, y desaparece al recargar. Solo se envía, con la pregunta y los números del resultado, a https://api.anthropic.com (modelo claude-sonnet-5-5); la política de seguridad de la página impide conectarse a cualquier otra dirección. La IA se equivoca: comprueba lo que diga con el simulador.</p>
+</section>
+</main>
+
+<footer>
+  <p>Código con licencia MIT; textos CC BY-NC-SA 4.0. Repositorio: <a href="https://github.com/mlopezpalma/fisica-con-fractales">github.com/mlopezpalma/fisica-con-fractales</a>. Todo el cálculo se hace en tu navegador.</p>
+</footer>
+<script src="fractales.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

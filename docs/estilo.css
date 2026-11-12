@@ -1,0 +1,31 @@
+:root { --tinta: #14181f; --suave: #5a6270; --fondo: #fbfaf7; --panel: #ffffff; --linea: #d9d6cf; --acento: #9a5b00; --acento-claro: #fff1d6; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--tinta); background: var(--fondo); }
+header { padding: 1rem 1.25rem 0; border-bottom: 1px solid var(--linea); background: var(--panel); }
+h1 { margin: 0 0 .75rem; font-size: 1.35rem; }
+h1 span { display: block; font-size: .9rem; font-weight: 400; color: var(--suave); }
+nav { display: flex; flex-wrap: wrap; gap: .25rem; }
+nav button { border: 1px solid var(--linea); border-bottom: none; background: var(--fondo); padding: .5rem .8rem; border-radius: .4rem .4rem 0 0; cursor: pointer; font: inherit; color: var(--tinta); }
+nav button[aria-selected="true"] { background: var(--acento-claro); border-color: var(--acento); font-weight: 600; }
+main { max-width: 1100px; margin: 0 auto; padding: 1rem 1.25rem 2rem; }
+.panel { display: none; }
+.panel.activo { display: block; }
+.controles { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin: .5rem 0 1rem; }
+label { display: inline-flex; gap: .4rem; align-items: center; }
+label.bloque { display: block; }
+textarea { width: 100%; font: inherit; padding: .5rem; border: 1px solid var(--linea); border-radius: .3rem; }
+input[type="number"] { width: 6rem; }
+input[type="password"] { width: 22rem; max-width: 70vw; }
+button { font: inherit; padding: .45rem .9rem; border-radius: .35rem; border: 1px solid var(--acento); background: var(--acento); color: #fff; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #1d5fbf; outline-offset: 2px; }
+canvas { background: #fff; border: 1px solid var(--linea); border-radius: .3rem; max-width: 100%; height: auto; }
+.doble { display: flex; flex-wrap: wrap; gap: 1rem; }
+.resultado { font-weight: 600; min-height: 1.5em; }
+.nota { color: var(--suave); font-size: .9rem; }
+.contexto, .respuesta { white-space: pre-wrap; background: var(--panel); border: 1px solid var(--linea); border-radius: .3rem; padding: .75rem; font-size: .9rem; }
+.contexto { color: var(--suave); }
+.solo-julia { display: none; }
+.solo-julia.visible { display: inline-flex; }
+footer { border-top: 1px solid var(--linea); padding: .75rem 1.25rem; color: var(--suave); font-size: .85rem; }
+footer a { color: var(--acento); }
+@media (max-width: 640px) { input[type="password"] { width: 100%; } }
